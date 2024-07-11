@@ -1,5 +1,4 @@
 """Adds config flow for ThermiaGenesis heat pump."""
-from enum import Enum
 import logging
 
 import voluptuous as vol
@@ -60,11 +59,13 @@ class ThermiaGenesisConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 {
                     vol.Required(CONF_HOST, default=defaults[CONF_HOST]): str,
                     vol.Required(CONF_PORT, default=defaults[CONF_PORT]): int,
-                    vol.Required(CONF_TYPE, default=defaults[CONF_TYPE]): selector({
-                        "select": {
-                            "options": ["inverter", "mega"],
+                    vol.Required(CONF_TYPE, default=defaults[CONF_TYPE]): selector(
+                        {
+                            "select": {
+                                "options": ["inverter", "mega"],
+                            }
                         }
-                    })
+                    ),
                 }
             ),
             errors=self._errors,

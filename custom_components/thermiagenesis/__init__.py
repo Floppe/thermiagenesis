@@ -12,6 +12,7 @@ from homeassistant.const import CONF_TYPE
 from homeassistant.core import Config
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
+from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.helpers.update_coordinator import UpdateFailed
 from pythermiagenesis import ThermiaGenesis
@@ -21,6 +22,7 @@ from .const import DOMAIN
 PLATFORMS = ["sensor", "binary_sensor", "climate", "switch", "number"]
 
 SCAN_INTERVAL = timedelta(seconds=30)
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -105,7 +107,7 @@ class ThermiaGenesisDataUpdateCoordinator(DataUpdateCoordinator):
                 f"{datetime.now()} Fetching heatpump data took {end_time - start_time} s"
             )
 
-        except (ConnectionError) as error:
+        except ConnectionError as error:
             raise UpdateFailed(error)
         return data
 
@@ -113,7 +115,7 @@ class ThermiaGenesisDataUpdateCoordinator(DataUpdateCoordinator):
         """Set data via library."""
         try:
             await self.thermia.async_set(register, value)
-        except (ConnectionError) as error:
+        except ConnectionError as error:
             raise UpdateFailed(error)
         return self.thermia.data
 
